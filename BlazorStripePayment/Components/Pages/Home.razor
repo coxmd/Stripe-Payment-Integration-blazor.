@@ -34,33 +34,34 @@
     {
         _productsInCart = [
         new Product(1, "Product 1", 555),
-        new Product(2, "Product 2", 720.5m),
-        new Product(3, "Product 3", 1000.23m),
-        new Product(4, "Product 4", 2500.8m),
-        ];
+new Product(2, "Product 2", 720.5m),
+new Product(3, "Product 3", 1000.23m),
+new Product(4, "Product 4", 2500.8m),
+];
     }
 
     private async Task CheckoutAsync()
     {
         var domain = NavigationManager.BaseUri; // https://localhost
 
-        var lineItems = _productsInCart.Select(p=> new SessionLineItemOptions{
-            Quantity = 1,
-            Price = p.Price.ToString()
-        }).ToList();
+        var lineItems = _productsInCart.Select(p => new SessionLineItemOptions
+            {
+                Quantity = 1,
+                Price = p.Price.ToString()
+            }).ToList();
 
-            var options = new SessionCreateOptions
+        var options = new SessionCreateOptions
             {
                 LineItems = lineItems,
                 Mode = "payment",
-                SuccessUrl = domain + "/success.html",
+                SuccessUrl = domain + "/payment-success",
                 CancelUrl = domain,
             };
-            var service = new SessionService();
-            Session session = service.Create(options);
+        var service = new SessionService();
+        Session session = service.Create(options);
 
-            Response.Headers.Add("Location", session.Url);
-            return new StatusCodeResult(303);
+        Response.Headers.Add("Location", session.Url);
+        return new StatusCodeResult(303);
     }
 
     class Product
