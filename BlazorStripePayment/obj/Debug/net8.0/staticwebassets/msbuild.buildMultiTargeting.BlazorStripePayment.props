@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\BlazorStripePayment.props" />
+</Project>

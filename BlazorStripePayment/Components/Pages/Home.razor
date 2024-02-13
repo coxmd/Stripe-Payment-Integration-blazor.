@@ -1,4 +1,8 @@
 ﻿@page "/"
+@using Stripe.Checkout
+
+@inject NavigationManager NavigationManager
+
 
 <PageTitle>Blazor Stripe Payments</PageTitle>
 
@@ -18,18 +22,45 @@
 <hr />
 <label>Total Amount: @_productsInCart.Sum(p => p.Price).ToString("c")</label>
 <hr />
-<button class="btn btn-sm btn-primary">Pay now</button>
+
+<form method="post" @formname="checkout-form" @onsubmit="CheckoutAsync">
+    <AntiforgeryToken />
+    <button class="btn btn-sm btn-primary">Pay now</button>
+</form>
 
 @code {
     private Product[] _productsInCart = [];
     protected override void OnInitialized()
     {
         _productsInCart = [
-        new Product(1, "Product 1", 15),
-new Product(2, "Product 2", 27.5m),
-new Product(3, "Product 3", 11.23m),
-new Product(4, "Product 4", 10.8m),
-];
+        new Product(1, "Product 1", 555),
+        new Product(2, "Product 2", 720.5m),
+        new Product(3, "Product 3", 1000.23m),
+        new Product(4, "Product 4", 2500.8m),
+        ];
+    }
+
+    private async Task CheckoutAsync()
+    {
+        var domain = NavigationManager.BaseUri; // https://localhost
+
+        var lineItems = _productsInCart.Select(p=> new SessionLineItemOptions{
+            Quantity = 1,
+            Price = p.Price.ToString()
+        }).ToList();
+
+            var options = new SessionCreateOptions
+            {
+                LineItems = lineItems,
+                Mode = "payment",
+                SuccessUrl = domain + "/success.html",
+                CancelUrl = domain,
+            };
+            var service = new SessionService();
+            Session session = service.Create(options);
+
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303);
     }
 
     class Product

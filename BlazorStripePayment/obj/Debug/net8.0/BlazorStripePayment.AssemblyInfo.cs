@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BlazorStripePayment")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+038b626de80023640957e0e1358c1986803f5d19")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ffe63db8d1d81bcc67deb5c2e03b94762a10f818")]
 [assembly: System.Reflection.AssemblyProductAttribute("BlazorStripePayment")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BlazorStripePayment")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
