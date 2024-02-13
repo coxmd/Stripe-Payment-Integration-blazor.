@@ -42,13 +42,21 @@ new Product(4, "Product 4", 2500.8m),
 
     private async Task CheckoutAsync()
     {
-        var domain = NavigationManager.BaseUri; // https://localhost
+        var domain = NavigationManager.BaseUri.TrimEnd('/'); // https://localhost
 
         var lineItems = _productsInCart.Select(p => new SessionLineItemOptions
+        {
+            Quantity = 1,
+            PriceData = new SessionLineItemPriceDataOptions
             {
-                Quantity = 1,
-                Price = p.Price.ToString()
-            }).ToList();
+                Currency = "Ksh",
+                UnitAmountDecimal = p.Price,
+                ProductData = new SessionLineItemPriceDataProductDataOptions
+                {
+                    Name = p.Name
+                }
+            }
+        }).ToList();
 
         var options = new SessionCreateOptions
             {
@@ -58,10 +66,9 @@ new Product(4, "Product 4", 2500.8m),
                 CancelUrl = domain,
             };
         var service = new SessionService();
-        Session session = service.Create(options);
+        Session session = await service.CreateAsync(options);
 
-        Response.Headers.Add("Location", session.Url);
-        return new StatusCodeResult(303);
+        NavigationManager.NavigateTo(session.Url);
     }
 
     class Product
